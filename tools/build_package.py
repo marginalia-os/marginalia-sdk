@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import re
+import stat
 import sys
 import zipfile
 from pathlib import Path
@@ -21,6 +22,7 @@ MAX_ARCHIVE_ENTRIES = 96
 MAX_ARCHIVE_UNCOMPRESSED_BYTES = 512 * 1024
 MAX_ARCHIVE_ENTRY_BYTES = 128 * 1024
 MAX_ARCHIVE_RELATIVE_PATH_BYTES = 180
+ZIP_EPOCH = (1980, 1, 1, 0, 0, 0)
 
 
 def load_json(path: Path) -> object:
@@ -111,7 +113,10 @@ def build_archive(package_dir: Path, output_dir: Path, profile: str) -> dict[str
     with zipfile.ZipFile(archive_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         for path in files:
             rel = path.relative_to(package_dir).as_posix()
-            archive.write(path, rel)
+            info = zipfile.ZipInfo(rel, date_time=ZIP_EPOCH)
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.external_attr = (stat.S_IMODE(path.stat().st_mode) & 0o777) << 16
+            archive.writestr(info, path.read_bytes())
 
     return {
         "id": manifest["id"],
