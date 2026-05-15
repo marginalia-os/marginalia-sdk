@@ -47,3 +47,18 @@ profile for packages that are ready for a registry or hub:
 ```sh
 python3 tools/validate_manifest.py --profile publish path/to/manifest.json
 ```
+
+## Create a package
+
+```sh
+python3 tools/create_package.py org.example.hangman "Hangman" --kind app --output ./packages
+```
+
+The command writes a side-loadable package folder with:
+
+- `manifest.json`
+- `README.md`
+- `src/entrypoints.json`
+
+Use `--profile local` for the smallest manifest accepted by current firmware. Use the default `publish` profile when the
+package is meant to become a registry or hub entry.

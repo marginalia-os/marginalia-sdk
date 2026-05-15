@@ -20,6 +20,12 @@ The firmware accepts a small local manifest for SD/Wi-Fi side loading:
 These are enough for the firmware to list, install, enable, disable, uninstall, and later route the package to a runtime
 host.
 
+Create a local package skeleton with:
+
+```sh
+python3 tools/create_package.py org.example.theme "Example Theme" --kind theme --profile local --output ./packages
+```
+
 ## Publish-ready manifest fields
 
 Packages submitted to the future hub should also include:
@@ -28,6 +34,12 @@ Packages submitted to the future hub should also include:
 - `permissions`
 - `entrypoints`
 - `integrity`
+
+Create a publish-ready skeleton with:
+
+```sh
+python3 tools/create_package.py org.example.hangman "Hangman" --kind app --output ./packages
+```
 
 ## Compatibility rules
 
