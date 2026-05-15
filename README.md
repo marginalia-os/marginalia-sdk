@@ -71,3 +71,15 @@ python3 tools/build_package.py ./packages/hangman --output ./dist --json
 
 The builder validates the manifest, rejects paths the firmware side-loader would reject, creates a deterministic package
 archive name, and prints the SHA-256 checksum that registry and hub entries should publish.
+
+## Build a registry entry
+
+```sh
+python3 tools/build_catalog_entry.py ./packages/hangman \
+  --archive-output ./dist \
+  --entry-output ./entries/org.example.hangman.json \
+  --artifact-url https://example.org/org.example.hangman-0.1.0.mpkg.zip
+```
+
+The command builds the `.mpkg.zip`, computes its checksum and size, and writes a catalog entry shaped for
+`marginalia-registry`.
