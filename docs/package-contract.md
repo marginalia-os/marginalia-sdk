@@ -73,6 +73,34 @@ Initial permissions:
 
 Use the narrowest permission set that fits the package.
 
+## Package settings
+
+Packages can declare user-configurable settings in the manifest. Firmware stores values outside the package archive in
+`/.marginalia/package-state/<package-id>.json`, so upgrades can replace package files without resetting user choices.
+
+Supported setting types in manifest v1:
+
+- `boolean`: toggled on the package settings screen
+- `enum`: cycles through a fixed list of string options
+
+Example:
+
+```json
+{
+  "settings": [
+    {
+      "id": "invertScreen",
+      "label": "Invert screen",
+      "type": "boolean",
+      "default": true
+    }
+  ]
+}
+```
+
+Setting ids must be stable. If a package removes or renames a setting, firmware may preserve the old value in package
+state, but runtime hosts should only read setting ids they understand.
+
 ## Lifecycle entrypoints
 
 Package entrypoints are declared by string name in the manifest and mapped by the firmware host.
