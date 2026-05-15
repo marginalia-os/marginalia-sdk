@@ -33,3 +33,9 @@ Package kinds:
 
 - [`schema/manifest.v1.schema.json`](./schema/manifest.v1.schema.json)
 - [`docs/package-contract.md`](./docs/package-contract.md)
+
+## Validate a manifest
+
+```sh
+python3 tools/validate_manifest.py path/to/manifest.json
+```
