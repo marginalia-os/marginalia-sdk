@@ -17,6 +17,10 @@ from jsonschema import Draft202012Validator
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = ROOT / "schema" / "manifest.v1.schema.json"
 SAFE_PART = re.compile(r"^[A-Za-z0-9._-]+$")
+MAX_ARCHIVE_ENTRIES = 96
+MAX_ARCHIVE_UNCOMPRESSED_BYTES = 512 * 1024
+MAX_ARCHIVE_ENTRY_BYTES = 128 * 1024
+MAX_ARCHIVE_RELATIVE_PATH_BYTES = 180
 
 
 def load_json(path: Path) -> object:
@@ -29,13 +33,28 @@ def safe_relative_path(path: Path) -> bool:
 
 def package_files(package_dir: Path) -> list[Path]:
     files: list[Path] = []
+    total_size = 0
     for path in sorted(package_dir.rglob("*")):
         if not path.is_file():
             continue
         rel = path.relative_to(package_dir)
         if not safe_relative_path(rel):
             raise ValueError(f"unsafe package path: {rel}")
+        rel_name = rel.as_posix()
+        if len(rel_name.encode("utf-8")) > MAX_ARCHIVE_RELATIVE_PATH_BYTES:
+            raise ValueError(
+                f"package archive path is too long: {rel_name} "
+                f"({len(rel_name.encode('utf-8'))} > {MAX_ARCHIVE_RELATIVE_PATH_BYTES})"
+            )
+        size = path.stat().st_size
+        if size > MAX_ARCHIVE_ENTRY_BYTES:
+            raise ValueError(f"package file is too large: {rel_name} ({size} > {MAX_ARCHIVE_ENTRY_BYTES})")
+        total_size += size
+        if total_size > MAX_ARCHIVE_UNCOMPRESSED_BYTES:
+            raise ValueError(f"package is too large: {total_size} > {MAX_ARCHIVE_UNCOMPRESSED_BYTES}")
         files.append(path)
+        if len(files) > MAX_ARCHIVE_ENTRIES:
+            raise ValueError(f"package has too many archive entries: {len(files)} > {MAX_ARCHIVE_ENTRIES}")
     return files
 
 

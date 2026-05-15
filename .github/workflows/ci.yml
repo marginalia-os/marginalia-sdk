@@ -39,3 +39,64 @@ jobs:
           python tools/create_package.py org.example.theme "Example Theme" --kind theme --profile local --output "$tmpdir"
           python tools/validate_manifest.py "$tmpdir/theme/manifest.json"
           python tools/build_package.py "$tmpdir/theme" --profile local --output "$tmpdir/dist" --json
+
+      - name: Test firmware archive limits
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess
+          import sys
+          from tempfile import TemporaryDirectory
+
+          from tools.build_package import build_archive
+
+
+          def expect_rejected(name, mutate, expected):
+              with TemporaryDirectory() as tmp:
+                  root = Path(tmp)
+                  subprocess.run(
+                      [
+                          sys.executable,
+                          "tools/create_package.py",
+                          "org.example.limit",
+                          "Limit Test",
+                          "--kind",
+                          "app",
+                          "--output",
+                          str(root),
+                      ],
+                      check=True,
+                  )
+                  package = root / "limit"
+                  mutate(package)
+                  try:
+                      build_archive(package, root / "dist", "publish")
+                  except ValueError as exc:
+                      if expected not in str(exc):
+                          raise AssertionError(f"{name}: expected {expected!r}, got {exc!s}") from exc
+                      return
+                  raise AssertionError(f"{name}: package build unexpectedly succeeded")
+
+
+          expect_rejected(
+              "entry count",
+              lambda package: [(package / f"file-{index}.txt").write_text("x", encoding="utf-8") for index in range(97)],
+              "too many archive entries",
+          )
+          expect_rejected(
+              "entry size",
+              lambda package: (package / "large.bin").write_bytes(b"x" * (128 * 1024 + 1)),
+              "file is too large",
+          )
+          expect_rejected(
+              "total size",
+              lambda package: [(package / f"chunk-{index}.bin").write_bytes(b"x" * (128 * 1024)) for index in range(5)],
+              "package is too large",
+          )
+          expect_rejected(
+              "path length",
+              lambda package: (package / ("a" * 181)).write_text("x", encoding="utf-8"),
+              "path is too long",
+          )
+          PY

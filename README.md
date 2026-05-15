@@ -72,6 +72,9 @@ python3 tools/build_package.py ./packages/hangman --output ./dist --json
 The builder validates the manifest, rejects paths the firmware side-loader would reject, creates a deterministic package
 archive name, and prints the SHA-256 checksum that registry and hub entries should publish.
 
+Firmware-safe archives are capped at 96 files, 512 KiB total uncompressed data, 128 KiB per file, and 180 bytes per
+relative archive path.
+
 ## Build a registry entry
 
 ```sh
