@@ -33,6 +33,7 @@ Package kinds:
 
 - [`schema/manifest.v1.schema.json`](./schema/manifest.v1.schema.json)
 - [`docs/package-contract.md`](./docs/package-contract.md)
+- [`docs/community-sdk.md`](./docs/community-sdk.md)
 
 ## Validate a manifest
 
