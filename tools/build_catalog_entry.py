@@ -20,6 +20,9 @@ def catalog_entry(
     manifest: dict[str, object],
     archive_metadata: dict[str, object],
     artifact_url: str,
+    source_url: str,
+    source_ref: str,
+    source_path: str,
     channel: str,
     released_at: str,
 ) -> dict[str, object]:
@@ -35,6 +38,11 @@ def catalog_entry(
         "kind": manifest["kind"],
         "execution": manifest["execution"],
         "channel": channel,
+        "source": {
+            "type": "git",
+            "url": source_url,
+            "ref": source_ref,
+        },
         "target": target,
         "integrity": {
             "sha256": archive_metadata["sha256"],
@@ -47,6 +55,9 @@ def catalog_entry(
         "releasedAt": released_at,
         "updatedAt": released_at,
     }
+
+    if source_path:
+        entry["source"]["path"] = source_path
 
     for key in ("summary", "author", "homepage"):
         value = manifest.get(key)
@@ -67,6 +78,9 @@ def main() -> int:
     parser.add_argument("--archive-output", type=Path, default=Path("dist"), help="archive output directory")
     parser.add_argument("--entry-output", type=Path, required=True, help="catalog entry JSON output path")
     parser.add_argument("--artifact-url", required=True, help="published URL for the built archive")
+    parser.add_argument("--source-url", required=True, help="git repository URL for the package source")
+    parser.add_argument("--source-ref", required=True, help="git ref used to build or review the package")
+    parser.add_argument("--source-path", default="", help="package subdirectory inside the source repository")
     parser.add_argument("--channel", choices=("stable", "beta", "experimental"), default="experimental")
     parser.add_argument("--released-at", default=utc_now())
     parser.add_argument("--json", action="store_true", help="print combined machine-readable metadata")
@@ -77,7 +91,16 @@ def main() -> int:
         manifest = load_json(args.package_dir / "manifest.json")
         if not isinstance(manifest, dict):
             raise ValueError("manifest must be a JSON object")
-        entry = catalog_entry(manifest, archive_metadata, args.artifact_url, args.channel, args.released_at)
+        entry = catalog_entry(
+            manifest,
+            archive_metadata,
+            args.artifact_url,
+            args.source_url,
+            args.source_ref,
+            args.source_path,
+            args.channel,
+            args.released_at,
+        )
         write_json(args.entry_output, entry)
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         print(f"catalog entry build failed: {exc}", file=sys.stderr)

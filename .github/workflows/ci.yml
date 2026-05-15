@@ -35,6 +35,9 @@ jobs:
             --archive-output "$tmpdir/dist" \
             --entry-output "$tmpdir/entries/org.example.hangman.json" \
             --artifact-url "https://example.org/org.example.hangman-0.1.0.mpkg.zip" \
+            --source-url "https://github.com/example/marginalia-packages.git" \
+            --source-ref "v0.1.0" \
+            --source-path "hangman" \
             --json
           python tools/create_package.py org.example.theme "Example Theme" --kind theme --profile local --output "$tmpdir"
           python tools/validate_manifest.py "$tmpdir/theme/manifest.json"

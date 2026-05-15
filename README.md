@@ -81,8 +81,12 @@ relative archive path.
 python3 tools/build_catalog_entry.py ./packages/hangman \
   --archive-output ./dist \
   --entry-output ./entries/org.example.hangman.json \
-  --artifact-url https://example.org/org.example.hangman-0.1.0.mpkg.zip
+  --artifact-url https://example.org/org.example.hangman-0.1.0.mpkg.zip \
+  --source-url https://github.com/example/marginalia-packages.git \
+  --source-ref v0.1.0 \
+  --source-path hangman
 ```
 
 The command builds the `.mpkg.zip`, computes its checksum and size, and writes a catalog entry shaped for
-`marginalia-registry`.
+`marginalia-registry`. The source fields make registry entries reviewable in the same spirit as RT-Thread package
+metadata: the artifact is what firmware installs, while the source repository and ref are what humans inspect.
