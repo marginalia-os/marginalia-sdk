@@ -90,6 +90,22 @@ Common entrypoints:
 - `onAppLaunch`
 - `onAppExit`
 
+## Theme descriptor
+
+Theme packages can include `src/theme.json` for firmware-hosted theme behavior. The v1 descriptor is intentionally
+small:
+
+```json
+{
+  "schemaVersion": 1,
+  "scope": "os",
+  "mode": "invert-screen"
+}
+```
+
+When an enabled compatible `theme` package declares this descriptor, firmware may invert normal OS display updates until
+the package is disabled or uninstalled.
+
 ## Notes
 
 The SDK does not decide how a package is executed. It only defines the contract that the firmware host and hub both understand.

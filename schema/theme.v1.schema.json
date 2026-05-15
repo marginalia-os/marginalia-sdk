@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://marginalia-os.github.io/schemas/theme.v1.schema.json",
+  "title": "Marginalia Theme Descriptor v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "scope", "mode"],
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "scope": {
+      "type": "string",
+      "enum": ["os"]
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["invert-screen"]
+    }
+  }
+}

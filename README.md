@@ -32,6 +32,7 @@ Package kinds:
 ## Start here
 
 - [`schema/manifest.v1.schema.json`](./schema/manifest.v1.schema.json)
+- [`schema/theme.v1.schema.json`](./schema/theme.v1.schema.json)
 - [`docs/package-contract.md`](./docs/package-contract.md)
 - [`docs/community-sdk.md`](./docs/community-sdk.md)
 
