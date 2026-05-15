@@ -31,6 +31,11 @@ jobs:
           python tools/create_package.py org.example.hangman "Hangman" --kind app --output "$tmpdir"
           python tools/validate_manifest.py --profile publish "$tmpdir/hangman/manifest.json"
           python tools/build_package.py "$tmpdir/hangman" --output "$tmpdir/dist" --json
+          python tools/build_catalog_entry.py "$tmpdir/hangman" \
+            --archive-output "$tmpdir/dist" \
+            --entry-output "$tmpdir/entries/org.example.hangman.json" \
+            --artifact-url "https://example.org/org.example.hangman-0.1.0.mpkg.zip" \
+            --json
           python tools/create_package.py org.example.theme "Example Theme" --kind theme --profile local --output "$tmpdir"
           python tools/validate_manifest.py "$tmpdir/theme/manifest.json"
           python tools/build_package.py "$tmpdir/theme" --profile local --output "$tmpdir/dist" --json
