@@ -10,11 +10,7 @@
     "name",
     "version",
     "kind",
-    "execution",
-    "target",
-    "permissions",
-    "entrypoints",
-    "integrity"
+    "execution"
   ],
   "properties": {
     "schemaVersion": {
@@ -23,6 +19,7 @@
     },
     "id": {
       "type": "string",
+      "maxLength": 96,
       "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]+$"
     },
     "name": {
@@ -57,7 +54,10 @@
       "properties": {
         "devices": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string",
+            "enum": ["xteink-x3", "xteink-x4"]
+          },
           "minItems": 1
         },
         "chipFamilies": {

@@ -40,3 +40,10 @@ Package kinds:
 ```sh
 python3 tools/validate_manifest.py path/to/manifest.json
 ```
+
+The default `local` profile matches what current firmware accepts for SD/Wi-Fi side loading. Use the stricter publish
+profile for packages that are ready for a registry or hub:
+
+```sh
+python3 tools/validate_manifest.py --profile publish path/to/manifest.json
+```

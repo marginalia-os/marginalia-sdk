@@ -6,7 +6,9 @@
 - Make compatibility checks deterministic.
 - Keep package capabilities explicit.
 
-## Required manifest fields
+## Local side-load manifest fields
+
+The firmware accepts a small local manifest for SD/Wi-Fi side loading:
 
 - `schemaVersion`
 - `id`
@@ -14,6 +16,14 @@
 - `version`
 - `kind`
 - `execution`
+
+These are enough for the firmware to list, install, enable, disable, uninstall, and later route the package to a runtime
+host.
+
+## Publish-ready manifest fields
+
+Packages submitted to the future hub should also include:
+
 - `target`
 - `permissions`
 - `entrypoints`
@@ -24,8 +34,18 @@
 - firmware must reject packages with a higher unsupported `schemaVersion`
 - firmware must reject packages targeting unsupported `chipFamilies`
 - firmware must reject packages targeting a different device class when no fallback is declared
-- firmware must reject packages that request unavailable permissions
+- firmware must reject packages with a higher unsupported package `apiLevel`
+- firmware must reject packages that require unavailable hardware such as PSRAM on Xteink X3/X4
+- firmware must reject packages that require a newer firmware version
+- runtime hosts must reject packages that request unavailable permissions
 - firmware must prefer the newest compatible package version unless the user pins a version
+
+Current firmware compatibility target:
+
+- devices: `xteink-x3`, `xteink-x4`
+- chip family: `esp32-c3`
+- package API level: `1`
+- PSRAM: unavailable
 
 ## Permissions vocabulary
 
