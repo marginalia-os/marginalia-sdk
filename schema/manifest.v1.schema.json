@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://marginalia-os.github.io/schemas/manifest.v1.schema.json",
+  "title": "Marginalia Package Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "name",
+    "version",
+    "kind",
+    "execution",
+    "target",
+    "permissions",
+    "entrypoints",
+    "integrity"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]+$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["theme", "sleep_screen", "reader_module", "integration", "app"]
+    },
+    "execution": {
+      "type": "string",
+      "enum": ["module", "app"]
+    },
+    "summary": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "license": {
+      "type": "string"
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["devices", "chipFamilies", "minFirmware", "apiLevel", "ramClass", "requiresPSRAM"],
+      "properties": {
+        "devices": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "chipFamilies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["esp32-c3", "esp32-s3", "esp32", "esp32-s2"]
+          },
+          "minItems": 1
+        },
+        "minFirmware": {
+          "type": "string",
+          "minLength": 1
+        },
+        "apiLevel": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "ramClass": {
+          "type": "string",
+          "enum": ["low", "medium", "high"]
+        },
+        "requiresPSRAM": {
+          "type": "boolean"
+        }
+      }
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["display", "input", "storage", "network", "reader_state", "sleep_state", "settings"]
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "version"],
+        "properties": {
+          "id": { "type": "string" },
+          "version": { "type": "string" }
+        }
+      }
+    },
+    "entrypoints": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "assets": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "icon": { "type": "string" },
+        "preview": { "type": "string" }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sha256"],
+      "properties": {
+        "sha256": { "type": "string", "minLength": 1 },
+        "signature": { "type": "string" }
+      }
+    }
+  }
+}
