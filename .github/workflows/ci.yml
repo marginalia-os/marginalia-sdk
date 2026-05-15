@@ -30,5 +30,7 @@ jobs:
           tmpdir="$(mktemp -d)"
           python tools/create_package.py org.example.hangman "Hangman" --kind app --output "$tmpdir"
           python tools/validate_manifest.py --profile publish "$tmpdir/hangman/manifest.json"
+          python tools/build_package.py "$tmpdir/hangman" --output "$tmpdir/dist" --json
           python tools/create_package.py org.example.theme "Example Theme" --kind theme --profile local --output "$tmpdir"
           python tools/validate_manifest.py "$tmpdir/theme/manifest.json"
+          python tools/build_package.py "$tmpdir/theme" --profile local --output "$tmpdir/dist" --json

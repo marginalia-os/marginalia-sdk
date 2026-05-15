@@ -62,3 +62,12 @@ The command writes a side-loadable package folder with:
 
 Use `--profile local` for the smallest manifest accepted by current firmware. Use the default `publish` profile when the
 package is meant to become a registry or hub entry.
+
+## Build an archive
+
+```sh
+python3 tools/build_package.py ./packages/hangman --output ./dist --json
+```
+
+The builder validates the manifest, rejects paths the firmware side-loader would reject, creates a deterministic package
+archive name, and prints the SHA-256 checksum that registry and hub entries should publish.
