@@ -127,12 +127,18 @@ small:
 {
   "schemaVersion": 1,
   "scope": "os",
-  "mode": "invert-screen"
+  "mode": "invert-screen",
+  "refreshMode": "half",
+  "textAntialiasing": "package-setting"
 }
 ```
 
 When an enabled compatible `theme` package declares this descriptor, firmware may invert normal OS display updates until
-the package is disabled or uninstalled.
+the package is disabled or uninstalled. `refreshMode` is optional and defaults to `fast`; polarity-changing e-ink themes
+should use `half` to reduce ghosting during normal updates. `textAntialiasing` is optional and defaults to `default`;
+inverted e-ink themes should use `off` or `package-setting` so reader grayscale text overlays do not fight the inverted
+black-and-white pass. `package-setting` reads the package boolean setting named `textAntialiasing` and suppresses reader
+text antialiasing when that setting is false.
 
 ## Notes
 
