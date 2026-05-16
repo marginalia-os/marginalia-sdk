@@ -17,6 +17,18 @@
     "mode": {
       "type": "string",
       "enum": ["invert-screen"]
+    },
+    "refreshMode": {
+      "type": "string",
+      "enum": ["fast", "half"],
+      "default": "fast",
+      "description": "Preferred refresh mode for normal display updates while this theme is active."
+    },
+    "textAntialiasing": {
+      "type": "string",
+      "enum": ["default", "off", "package-setting"],
+      "default": "default",
+      "description": "Whether reader text antialiasing may remain enabled while this theme is active."
     }
   }
 }
